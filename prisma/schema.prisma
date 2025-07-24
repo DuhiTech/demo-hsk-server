@@ -131,14 +131,14 @@ enum QuestionType {
   MultipleChoice
   TrueFalse
   Matching
-  Order_words
-  Order_sentences
-  Short_answer
+  OrderWords
+  OrderSentences
+  ShortAnswer
   Grouped
 }
 
 enum UserRole {
   Admin
-  student
+  Student
   Lecturer
 }
