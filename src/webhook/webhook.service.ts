@@ -10,7 +10,7 @@ export class WebhookService {
     const user = await this.prisma.user.create({
       data: {
         clerkUserId: data.id,
-        email: data.email_addresses[0]?.email_address,
+        email: data.email_addresses[0]?.email_address || '',
         name: `${data.first_name} ${data.last_name}`.trim(),
         role: 'Student',
       },

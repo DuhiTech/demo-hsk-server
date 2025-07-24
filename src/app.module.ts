@@ -3,9 +3,10 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AppController } from './app.controller';
 import { WebhookModule } from './webhook/webhook.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, PrismaModule, WebhookModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, PrismaModule, WebhookModule],
   controllers: [AppController],
 })
 export class AppModule {}
