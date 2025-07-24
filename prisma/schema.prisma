@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid()) @db.Uuid
+  clerkUserId String   @unique
+  email       String   @unique
+  name        String
+  image       String?
+  role        UserRole
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  exams    Exam[]
+  attempts Attempt[]
+}
+
+model Exam {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
+  title       String
+  description String?
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections Section[]
+  attempts Attempt[]
+}
+
+model Section {
+  id          String   @id @default(uuid()) @db.Uuid
+  examId      String   @db.Uuid
+  title       String
+  description String?
+  timeLimit   Int      @default(0)
+  order       Int      @db.SmallInt
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  exam            Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  questions       Question[]
+  attemptSections AttemptSection[]
+}
+
+model Question {
+  id        String       @id @default(uuid()) @db.Uuid
+  sectionId String       @db.Uuid
+  content   String?
+  grade     Float        @default(0) @db.Real
+  order     Int
+  type      QuestionType @default(SingleChoice)
+  parentId  String?      @db.Uuid
+
+  section           Section    @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  parentQuestion    Question?  @relation("QuestionToQuestion", fields: [id], references: [id], onDelete: Cascade)
+  childrenQuestions Question[] @relation("QuestionToQuestion")
+  options           Option[]
+  answers           Answer[]
+}
+
+model Option {
+  id         String   @id @default(uuid()) @db.Uuid
+  questionId String   @db.Uuid
+  content    String?
+  isCorrect  Boolean?
+  position   Int?     @db.SmallInt
+  order      Int      @db.SmallInt
+  matchId    String?  @db.Uuid
+
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  matchOption  Option?  @relation("OptionToOption", fields: [matchId], references: [id], onDelete: Cascade)
+  otherOptions Option[] @relation("OptionToOption")
+}
+
+model Attempt {
+  id          String    @id @default(uuid()) @db.Uuid
+  startAt     DateTime  @default(now()) @db.Timestamptz(6)
+  completedAt DateTime? @db.Timestamptz(6)
+  userId      String    @db.Uuid
+  examId      String    @db.Uuid
+  total       Float?    @db.Real
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exam            Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  attemptSections AttemptSection[]
+  answers         Answer[]
+}
+
+model AttemptSection {
+  attemptId   String    @db.Uuid
+  sectionId   String    @db.Uuid
+  startAt     DateTime  @default(now()) @db.Timestamptz(6)
+  completedAt DateTime? @db.Timestamptz(6)
+  grade       Float?    @db.Real
+
+  attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@id([attemptId, sectionId])
+}
+
+model Answer {
+  id            String   @id @default(uuid()) @db.Uuid
+  attemptId     String   @db.Uuid
+  questionId    String   @db.Uuid
+  content       Json
+  isCorrect     Boolean?
+  scoreObtained Float    @db.Real
+  flag          Boolean? @default(false)
+
+  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+enum QuestionType {
+  SingleChoice
+  MultipleChoice
+  TrueFalse
+  Matching
+  Order_words
+  Order_sentences
+  Short_answer
+  Grouped
+}
+
+enum UserRole {
+  Admin
+  student
+  Lecturer
+}
