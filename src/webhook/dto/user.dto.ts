@@ -1,7 +1,7 @@
 // user-created.dto.ts
 import { IsBoolean, IsString, IsOptional, IsArray, IsNumber, IsObject, IsUrl, IsDate, IsEmail } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 class EmailItem {
   @ApiProperty()
@@ -9,7 +9,7 @@ class EmailItem {
   email_address: string;
 }
 
-export class UserCreatedData {
+export class ClerkUserData {
   @ApiProperty()
   @IsBoolean()
   backup_code_enabled: boolean;
@@ -22,7 +22,7 @@ export class UserCreatedData {
   @IsBoolean()
   create_organization_enabled: boolean;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   create_organizations_limit: number | null;
@@ -48,7 +48,7 @@ export class UserCreatedData {
   @IsArray()
   external_accounts: any[];
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   external_id: string | null;
@@ -92,17 +92,17 @@ export class UserCreatedData {
   @IsBoolean()
   locked: boolean;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   lockout_expires_in_seconds: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   mfa_disabled_at: number | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   mfa_enabled_at: number | null;
@@ -127,17 +127,17 @@ export class UserCreatedData {
   @IsString()
   primary_email_address_id: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   primary_phone_number_id: string | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   primary_web3_wallet_id: string | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsObject()
   private_metadata: object | null;
@@ -171,12 +171,12 @@ export class UserCreatedData {
   @IsDate()
   updated_at: Date;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   username: string | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   verification_attempts_remaining: number | null;
@@ -186,8 +186,8 @@ export class UserCreatedData {
   web3_wallets: any[];
 }
 
-export class UserCreatedDto {
+export class ClerkUserDto {
   @ApiProperty()
   @IsObject()
-  data: UserCreatedData;
+  data: ClerkUserData;
 }
