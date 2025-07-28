@@ -26,6 +26,7 @@ export class WebhookService {
 
     await clerkClient.users.updateUserMetadata(user.clerkUserId, {
       publicMetadata: {
+        id: user.id,
         role: user.role,
       },
     });
