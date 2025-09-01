@@ -13,7 +13,8 @@ export async function clerkAuthMiddleware(req: Request, _res: Response, next: Ne
     }
 
     next();
-  } catch {
+  } catch (error) {
+    console.error(error);
     throw new UnauthorizedException();
   }
 }
