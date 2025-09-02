@@ -6,10 +6,11 @@ import { WebhookModule } from './webhook/webhook.module';
 import { ConfigModule } from '@nestjs/config';
 import { ExamModule } from './exam/exam.module';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { validate } from './env.validation';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, PrismaModule, WebhookModule, ExamModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate }), AuthModule, PrismaModule, WebhookModule, ExamModule],
   controllers: [AppController],
-  providers: [{ provide: 'APP_GUARD', useClass: RolesGuard }]
+  providers: [{ provide: 'APP_GUARD', useClass: RolesGuard }],
 })
 export class AppModule {}
