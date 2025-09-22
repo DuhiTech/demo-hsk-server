@@ -39,6 +39,8 @@ model Exam {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   sections Section[]
   attempts Attempt[]
+
+  @@unique([userId, title], name: "uniq_exam_user_title")
 }
 
 model Section {

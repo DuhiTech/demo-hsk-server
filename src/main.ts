@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { clerkMiddleware } from '@clerk/express';
 import { clerkAuthMiddleware } from './auth/middlewares/clerk-auth.middleware';
 
 async function bootstrap() {
@@ -15,7 +14,6 @@ async function bootstrap() {
     }),
   );
 
-  app.use(clerkMiddleware());
   app.use(clerkAuthMiddleware)
 
   const prefix = '/api/v1';

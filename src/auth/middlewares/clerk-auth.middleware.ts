@@ -8,12 +8,15 @@ export async function clerkAuthMiddleware(req: Request, _res: Response, next: Ne
     const authHeader = req.headers.authorization;
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.replace('Bearer ', '').trim();
-      const payload = await verifyToken(token, {});
+      const payload = await verifyToken(token, {
+        jwtKey: process.env.CLERK_JWT_KEY,
+      });
       req.user = payload as ClerkJWTClaims;
     }
 
     next();
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
     throw new UnauthorizedException();
   }

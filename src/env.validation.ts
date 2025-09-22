@@ -10,6 +10,9 @@ class EnvironmentVariables {
 
   @IsString()
   CLERK_SECRET_KEY: string;
+
+  @IsString()
+  CLERK_JWT_KEY: string;
 }
 
 export function validate(config: Record<string, unknown>) {
