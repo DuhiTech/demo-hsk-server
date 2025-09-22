@@ -1,11 +1,8 @@
 import { JwtPayload } from '@clerk/types';
-import { Role } from './enums';
+import UserMetadata from './user-metadata';
 
 type ClerkJWTClaims = JwtPayload & {
-  public_metadata: {
-    id: string,
-    role: Role
-  }
+  public_metadata: UserMetadata
 }
 
 export default ClerkJWTClaims;

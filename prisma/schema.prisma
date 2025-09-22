@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -35,6 +34,7 @@ model Exam {
   description String?
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+  isDeleted   Boolean  @default(false)
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   sections Section[]

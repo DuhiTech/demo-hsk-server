@@ -8,7 +8,7 @@ export class CreateExamDto {
   @MaxLength(255, { message: 'Tiêu đề không được vượt quá 255 kí tự' })
   title: string;
 
-  @ApiProperty({ example: 'Mô tả', maxLength: 1000 })
+  @ApiProperty({ example: 'Mô tả', maxLength: 1000, required: false })
   @IsString()
   @MaxLength(255, { message: 'Mô tả không được vượt quá 1000 kí tự' })
   description?: string;

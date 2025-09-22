@@ -14,7 +14,7 @@ async function bootstrap() {
     }),
   );
 
-  app.use(clerkAuthMiddleware)
+  app.use(clerkAuthMiddleware);
 
   const prefix = '/api/v1';
   app.setGlobalPrefix(prefix);
