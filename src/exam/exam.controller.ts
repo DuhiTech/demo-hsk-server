@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ExamService } from './exam.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateExamDto, ExamDto, UpdateExamDto } from './dto';
@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { User } from 'src/auth/decorators/user.decorator';
 import { Role } from 'types/enums';
 import UserMetadata from 'types/user-metadata';
+import { BulkIdsDto, PaginationQueryDto } from 'src/common/dto';
 
 @ApiBearerAuth()
 @Controller('exams')
@@ -36,11 +37,35 @@ export class ExamController {
     return this.examService.deleteExam(id, user);
   }
 
+  @ApiOperation({ summary: 'Phục hồi đề thi' })
+  @ApiResponse({ status: 200, type: ExamDto })
+  @Roles(Role.Admin, Role.Lecturer)
+  @Post('/restore')
+  restoreExam(@Body() data: BulkIdsDto, @User() user: UserMetadata) {
+    return this.examService.restoreExams(data.ids, user);
+  }
+
+  @ApiOperation({ summary: 'Xóa vĩnh viễn đề thi' })
+  @ApiResponse({ status: 200, type: ExamDto })
+  @Roles(Role.Admin, Role.Lecturer)
+  @Post('/destroy')
+  destroyExam(@Body() data: BulkIdsDto, @User() user: UserMetadata) {
+    return this.examService.destroyExams(data.ids, user);
+  }
+
   @ApiOperation({ summary: 'Lấy đề thi theo ID' })
   @ApiResponse({ status: 200, type: ExamDto })
   @Roles(Role.Admin, Role.Lecturer)
   @Get(':id')
   getExamById(@Param('id') id: string, @User() user: UserMetadata) {
     return this.examService.getExamById(id, user);
+  }
+
+  @ApiOperation({ summary: 'Lấy đề thi' })
+  @ApiResponse({ status: 200, type: ExamDto })
+  @Roles(Role.Admin, Role.Lecturer)
+  @Get()
+  getExams(@Query() q: PaginationQueryDto<ExamDto>, @User() user: UserMetadata) {
+    return this.examService.getExams(q, user);
   }
 }
