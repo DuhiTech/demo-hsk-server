@@ -7,9 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { ExamModule } from './exam/exam.module';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { validate } from './env.validation';
+import { SectionModule } from './section/section.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, validate }), AuthModule, PrismaModule, WebhookModule, ExamModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate }), AuthModule, PrismaModule, WebhookModule, ExamModule, SectionModule],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: RolesGuard }],
 })

@@ -11,11 +11,20 @@ import { Prisma } from '@prisma/client';
 export class ExamService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private SELECT = {
+    id: true,
+    title: true,
+    description: true,
+    createdAt: true,
+    updatedAt: true,
+    userId: true,
+  };
+
   async createExam(data: CreateExamDto, userId: string) {
     const title = data.title.trim();
 
     try {
-      return await this.prisma.exam.create({ data: { ...data, title, userId } });
+      return await this.prisma.exam.create({ data: { ...data, title, userId }, select: this.SELECT });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new ConflictException('Exam title already exists for this user');
@@ -42,6 +51,7 @@ export class ExamService {
       return await this.prisma.exam.update({
         where: { id },
         data: { ...data, title },
+        select: this.SELECT,
       });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -60,7 +70,11 @@ export class ExamService {
       throw new ForbiddenException('You cannot get this exam');
     }
 
-    return await this.prisma.exam.update({ where: { id, isDeleted: false }, data: { isDeleted: true } });
+    return await this.prisma.exam.update({
+      where: { id, isDeleted: false },
+      data: { isDeleted: true },
+      select: this.SELECT,
+    });
   }
 
   restoreExams(ids: string[], user: UserMetadata) {
@@ -115,7 +129,13 @@ export class ExamService {
   }
 
   async getExamById(id: string, user: UserMetadata) {
-    const exam = await this.prisma.exam.findUnique({ where: { id, isDeleted: false } });
+    const exam = await this.prisma.exam.findUnique({
+      where: { id, isDeleted: false },
+      select: {
+        ...this.SELECT,
+        sections: true,
+      },
+    });
 
     if (!exam) throw new NotFoundException('Exam not found');
 
@@ -151,6 +171,10 @@ export class ExamService {
         orderBy,
         skip,
         take: limit,
+        select: {
+          ...this.SELECT,
+          sections: true,
+        },
       }),
       this.prisma.exam.count({ where }),
     ]);
