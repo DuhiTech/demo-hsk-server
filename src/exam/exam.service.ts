@@ -11,13 +11,15 @@ import { Prisma } from '@prisma/client';
 export class ExamService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private SELECT = {
+  private SELECT: Prisma.ExamSelect = {
     id: true,
     title: true,
     description: true,
     createdAt: true,
     updatedAt: true,
     userId: true,
+    closeAt: true,
+    openAt: true,
   };
 
   async createExam(data: CreateExamDto, userId: string) {
@@ -151,7 +153,8 @@ export class ExamService {
     const limit = query.limit ?? 10;
     const skip = (page - 1) * limit;
 
-    const baseWhere: Prisma.ExamWhereInput = user.role === Role.Admin ? {} : { userId: user.id };
+    const baseWhere: Prisma.ExamWhereInput =
+      user.role === Role.Admin ? {} : user.role === Role.Lecturer ? { userId: user.id } : { isPublished: true };
 
     const where: Prisma.ExamWhereInput = {
       AND: [
@@ -174,6 +177,7 @@ export class ExamService {
         select: {
           ...this.SELECT,
           sections: true,
+          ...(user.role !== Role.Student ? { isPublished: true } : {}),
         },
       }),
       this.prisma.exam.count({ where }),

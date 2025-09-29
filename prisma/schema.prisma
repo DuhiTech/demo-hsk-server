@@ -28,13 +28,16 @@ model User {
 }
 
 model Exam {
-  id          String   @id @default(uuid()) @db.Uuid
-  userId      String   @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
   title       String
   description String?
-  createdAt   DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
-  isDeleted   Boolean  @default(false)
+  isDeleted   Boolean   @default(false)
+  isPublished Boolean   @default(false)
+  openAt      DateTime? @db.Timestamptz(6)
+  closeAt     DateTime? @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(6)
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   sections Section[]

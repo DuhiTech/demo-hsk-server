@@ -13,8 +13,7 @@ export class RolesGuard implements CanActivate {
 
     const { user } = ctx.switchToHttp().getRequest<Express.Request>();
     if (!user) throw new UnauthorizedException('Invalid or missing token');
-
-    if (!requiredRoles.includes(user.public_metadata.role)) {
+    if (requiredRoles.length > 0 && !requiredRoles.includes(user.public_metadata.role)) {
       throw new ForbiddenException('Access denied');
     }
 

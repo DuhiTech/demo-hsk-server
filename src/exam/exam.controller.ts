@@ -6,7 +6,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { User } from 'src/auth/decorators/user.decorator';
 import { Role } from 'types/enums';
 import UserMetadata from 'types/user-metadata';
-import { BulkIdsDto, PaginationQueryDto } from 'src/common/dto';
+import { BulkIdsDto, PageDto, PaginationQueryDto } from 'src/common/dto';
 
 @ApiBearerAuth()
 @Controller('exams')
@@ -62,8 +62,8 @@ export class ExamController {
   }
 
   @ApiOperation({ summary: 'Lấy đề thi' })
-  @ApiResponse({ status: 200, type: ExamDto })
-  @Roles(Role.Admin, Role.Lecturer)
+  @ApiResponse({ status: 200, type: PageDto<ExamDto> })
+  @Roles()
   @Get()
   getExams(@Query() q: PaginationQueryDto<ExamDto>, @User() user: UserMetadata) {
     return this.examService.getExams(q, user);
