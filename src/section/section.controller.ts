@@ -1,9 +1,8 @@
 import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
 import { SectionService } from './section.service';
-import { User } from 'src/auth/decorators/user.decorator';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Role } from 'types/enums';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Roles, User } from 'src/auth/decorators';
 import { CreateSectionDto, SectionDto, UpdateSectionDto } from './dto';
 import UserMetadata from 'types/user-metadata';
 

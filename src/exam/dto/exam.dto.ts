@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import { BaseDto } from 'src/common/dto';
 import { SectionDto } from 'src/section/dto';
 
@@ -22,6 +21,6 @@ export class ExamDto extends BaseDto {
   @ApiProperty({ example: new Date().toISOString(), required: false })
   closeAt?: Date | null;
 
-  @ApiProperty({ example: [], isArray: true })
+  @ApiProperty({ type: SectionDto, isArray: true })
   sections: SectionDto[] = [];
 }

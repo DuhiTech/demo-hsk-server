@@ -2,8 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { ExamService } from './exam.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateExamDto, ExamDto, UpdateExamDto } from './dto';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { User } from 'src/auth/decorators/user.decorator';
+import { Roles, User } from 'src/auth/decorators';
 import { Role } from 'types/enums';
 import UserMetadata from 'types/user-metadata';
 import { BulkIdsDto, PageDto, PaginationQueryDto } from 'src/common/dto';

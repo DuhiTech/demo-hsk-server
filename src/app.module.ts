@@ -8,9 +8,10 @@ import { ExamModule } from './exam/exam.module';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { validate } from './env.validation';
 import { SectionModule } from './section/section.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, validate }), AuthModule, PrismaModule, WebhookModule, ExamModule, SectionModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate }), AuthModule, PrismaModule, WebhookModule, ExamModule, SectionModule, QuestionModule],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: RolesGuard }],
 })
